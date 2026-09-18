@@ -1,0 +1,12 @@
+{
+  "name": "local-picks",
+  "description": "Recommends and evaluates restaurants, hotels, sights, tours and day plans by ranking evidence quality over crowd ratings, and labels every pick with an explicit confidence level.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Sarat Vemuri"
+  },
+  "homepage": "https://github.com/saratcvemuri/local-picks-skill",
+  "repository": "https://github.com/saratcvemuri/local-picks-skill",
+  "license": "Apache-2.0",
+  "keywords": ["travel", "restaurants", "hotels", "recommendations", "itinerary"]
+}

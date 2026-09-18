@@ -1,0 +1,14 @@
+{
+  "name": "local-picks-skill",
+  "owner": {
+    "name": "Sarat Vemuri",
+    "url": "https://github.com/saratcvemuri"
+  },
+  "plugins": [
+    {
+      "name": "local-picks",
+      "source": "./",
+      "description": "Recommends and evaluates places and experiences by evidence quality, with an explicit confidence label on every pick."
+    }
+  ]
+}

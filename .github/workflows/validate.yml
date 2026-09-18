@@ -1,0 +1,73 @@
+name: validate
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install pyyaml
+
+      # Spec checks plus this repo's own policies: the 300-line body budget and
+      # the personal-data deny-list. A failure here is the enforcement
+      # mechanism, not a nuisance -- see README.
+      - name: Validate skills
+        run: python scripts/validate_skills.py
+
+      # A malformed manifest fails at install time, which is the worst place to
+      # find out. Parse both here.
+      - name: Validate manifests
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+
+          errors = []
+          mkt = json.loads(pathlib.Path(".claude-plugin/marketplace.json").read_text())
+          plg = json.loads(pathlib.Path(".claude-plugin/plugin.json").read_text())
+
+          for key in ("name", "owner", "plugins"):
+              if key not in mkt:
+                  errors.append(f"marketplace.json: missing required key {key!r}")
+          if "name" not in mkt.get("owner", {}):
+              errors.append("marketplace.json: owner requires a 'name'")
+          if "name" not in plg:
+              errors.append("plugin.json: missing required key 'name'")
+
+          for entry in mkt.get("plugins", []):
+              for key in ("name", "source"):
+                  if key not in entry:
+                      errors.append(f"marketplace.json: plugin entry missing {key!r}")
+              # The repo root is the plugin, so a relative source must resolve
+              # to a directory that actually holds a plugin manifest.
+              source = entry.get("source")
+              if isinstance(source, str) and source.startswith("./"):
+                  manifest = pathlib.Path(source) / ".claude-plugin" / "plugin.json"
+                  if not manifest.is_file():
+                      errors.append(f"marketplace.json: source {source!r} has no {manifest}")
+              if entry.get("name") != plg.get("name"):
+                  errors.append(
+                      f"marketplace.json: plugin entry {entry.get('name')!r} does not match "
+                      f"plugin.json name {plg.get('name')!r}"
+                  )
+
+          placeholders = [
+              f"{path}: still contains a setup placeholder ({hit})"
+              for path in (".claude-plugin/marketplace.json", ".claude-plugin/plugin.json", "README.md")
+              for hit in ("Sarat Vemuri", "saratcvemuri/")
+              if hit in pathlib.Path(path).read_text()
+          ]
+          errors.extend(placeholders)
+
+          for error in errors:
+              print(f"  - {error}", file=sys.stderr)
+          sys.exit(1 if errors else 0)
+          PY

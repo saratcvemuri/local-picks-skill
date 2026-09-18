@@ -1,0 +1,98 @@
+name: Failure report
+description: A recommendation this skill made that went wrong.
+title: "[failure] "
+labels: ["failure"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every rule in this skill is here because a recommendation failed without
+        it. This form asks for the failure, because that is what decides whether
+        a rule is earned.
+
+        The last field matters most: **which step should have caught this?** A
+        report that cannot name a step is a feature request rather than a
+        failure, and gets triaged differently. That is not a brush-off — it is
+        the difference between a rule the skill has earned and one it has not.
+
+        Please leave out anything you would not want in a public repository. No
+        real names, and no addresses or booking references.
+
+  - type: textarea
+    id: asked
+    attributes:
+      label: What you asked
+      description: The prompt, as close to verbatim as you have it.
+      placeholder: "Where should we eat dinner tonight — just the two of us, walking distance."
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: What was already on file
+      description: >
+        Dietary lines, past verdicts, travel style, who you were with — whatever
+        the skill had to work from. Step 1 behaves differently when nothing is
+        known, so "nothing" is a useful answer.
+    validations:
+      required: false
+
+  - type: textarea
+    id: recommended
+    attributes:
+      label: What it recommended
+      description: >
+        The picks and their confidence labels. If a label was missing, say so —
+        that is itself a Step 5 failure.
+    validations:
+      required: true
+
+  - type: textarea
+    id: happened
+    attributes:
+      label: What actually happened
+      description: >
+        The place was a bar, not a restaurant. It was closed. Six calls, six
+        refusals. The tasting menu had one dish you could eat. Whatever it was.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: step
+    attributes:
+      label: Which step should have caught it
+      options:
+        - "Step 1 — opening: context named, assumptions stated"
+        - "Step 2 — elicitation: only what changes the answer"
+        - "Step 3 — source hierarchy: evidence ranked by how hard it is to game"
+        - "Step 4 — screening: category, hours, menu format, logistics"
+        - "Step 5 — confidence labels, including operational claims"
+        - "Step 6 — output format"
+        - "Step 7 — closing the loop"
+        - "None of these — the skill has no rule that covers this"
+    validations:
+      required: true
+
+  - type: textarea
+    id: generalizes
+    attributes:
+      label: What generalizes
+      description: >
+        The reason a pick failed travels; the name of the place does not. If you
+        already see the rule — "availability has to outrank quality when the
+        meal is hours away" — write it here. If you do not, leave it blank; that
+        is what the discussion is for.
+    validations:
+      required: false
+
+  - type: input
+    id: recurrence
+    attributes:
+      label: Has this happened before?
+      description: >
+        A first occurrence is an observation. A second is usually a rule. Say
+        which this is if you know.
+      placeholder: "First time I've noticed it / third time this trip"
+    validations:
+      required: false

@@ -1,0 +1,62 @@
+# Deny-list for the personal-data check in validate_skills.py.
+#
+# One case-insensitive Python regex per line. Blank lines and # comments are
+# ignored. Every pattern here is matched against the whole SKILL.md, frontmatter
+# included.
+#
+# WHY THIS EXISTS
+#
+# The skill is public and the pressure to embed one useful local fact is
+# constant: a dietary line that keeps coming up, a neighborhood the owner always
+# stays in, the restaurant that worked last time. Each one is individually
+# harmless and collectively turns a general method into one person's notebook.
+# Facts about places and people belong in the user's memory. The skill holds
+# only the method for finding them.
+#
+# WHAT THIS CANNOT DO
+#
+# This is a tripwire, not a guarantee. It catches the phrasings that recur.
+# It will not recognise an arbitrary restaurant, hotel or neighborhood name --
+# no pattern list can. Reviewing a diff for names is still a human job.
+#
+# KEEPING YOUR OWN TERMS OUT OF A PUBLIC FILE
+#
+# Anything that would itself be personal data if published here -- your name,
+# your household's dietary lines, the city you live in -- goes in
+# scripts/denylist.local.txt, which is git-ignored. The validator reads both.
+
+# --- Dietary specifics ---------------------------------------------------
+# Generic words like "dietary lines" or "dietary constraint" are the method and
+# stay. A stated restriction is a fact about a person and does not.
+\bno (pork|beef|dairy|gluten|shellfish|alcohol)\b
+\b(gluten|dairy|nut)[- ]free\b
+\b(vegetarian|vegan|pescatarian|halal|kosher)\b
+\b(allergic to|allergy to|intolerant of)\b
+
+# --- Named people --------------------------------------------------------
+\b(my|the owner'?s) (wife|husband|partner|spouse|kids?|children)\b
+
+# --- Cities and regions --------------------------------------------------
+# Unambiguous names only. Words that double as ordinary English (Nice, Split,
+# Bath, Reading, Mobile, Sandwich) are left out on purpose: the false positives
+# would train you to ignore this check, which is worse than missing one name.
+\bQu[eé]bec\b
+\bMontr[eé]al\b
+\b(Atlanta|Greenville|Macon|Savannah|Charleston)\b
+\b(Paris|London|Barcelona|Madrid|Lisbon|Rome|Milan|Florence|Venice|Naples)\b
+\b(Tokyo|Kyoto|Osaka|Seoul|Singapore|Bangkok|Hong Kong|Taipei)\b
+\b(Copenhagen|Stockholm|Oslo|Helsinki|Amsterdam|Berlin|Munich|Vienna|Prague)\b
+\b(Istanbul|Dubai|Marrakech|Cape Town|Buenos Aires|Mexico City|Lima)\b
+\b(New York|Brooklyn|Manhattan|Chicago|Boston|Philadelphia|Seattle|Portland)\b
+\b(San Francisco|Los Angeles|New Orleans|Austin|Nashville|Miami|Denver)\b
+\b(Toronto|Vancouver|Sydney|Melbourne|Auckland)\b
+
+# --- Neighborhood name shapes --------------------------------------------
+# Catches the common European/Latin form (Saint-Roch, San Telmo, Santa Croce).
+# Deliberately narrow; most neighborhoods will not match anything.
+\b(Saint|St\.|Sainte|San|Santa|Santo)[- ][A-Z][a-z]+\b
+
+# --- Booking and venue tells ---------------------------------------------
+# A URL or a phone number in a skill body is almost always a specific place.
+https?://(?!docs\.claude\.com|platform\.claude\.com|agentskills\.io)
+\+\d{1,3}[ -]\d[\d ().-]{6,}

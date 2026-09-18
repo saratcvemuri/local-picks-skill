@@ -1,0 +1,12 @@
+# Terms the owner screens for that would themselves be personal data if
+# published here. Read by scripts/validate_skills.py when present.
+scripts/denylist.local.txt
+
+# Build artifacts. The repo is the source of truth; anything installed or
+# packaged from it is a copy.
+dist/
+*.zip
+
+__pycache__/
+*.pyc
+.DS_Store
