@@ -139,11 +139,16 @@ description. Nothing else is affected.
 The repo is the only place edits land. A session can propose a diff; nothing is
 authoritative until it is committed here.
 
-Content changes come from **observed failures only** — not from tone, not from
-"this could be clearer," not from a rule that seems likely to help. Every rule
+Content changes come from **observed failures** — not from tone, not from "this
+could be clearer," not from a rule that seems likely to help. Nearly every rule
 in the skill is there because a recommendation failed without it, and the
 [CHANGELOG](CHANGELOG.md) records the failure rather than the edit precisely so
 that a rule which has stopped earning its place can be found and removed.
+
+A rule added deliberately, with no failure behind it, is allowed but is filed
+under `Design` and marked unearned. The distinction matters because nothing
+forced such a rule into existence and so nothing will naturally expose it as
+unnecessary. Say what would show it working, and check back.
 
 Before opening a pull request:
 

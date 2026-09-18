@@ -15,6 +15,15 @@ out that is what shows whether a rule is still earning its place.
 If you cannot write the failure line, you are making a change the skill has not
 earned yet. Write it down as an issue and wait for the second occurrence.
 
+The exception is a rule added deliberately rather than in response to something
+going wrong. Those are legitimate, but they are **unearned**: nothing forced
+them into existence, so nothing will naturally reveal them as unnecessary
+either. File them under a `Design` heading, say plainly that no failure
+prompted them, and name what would show the rule working. A rule that never
+demonstrates its value is the first candidate for removal, and six months out
+this heading is the only thing that distinguishes it from a rule that was paid
+for in advance.
+
 Changes that are not behavioral — packaging, tooling, docs — go under a
 `Repository` heading in the same entry, so they never get mistaken for rules.
 
@@ -38,6 +47,23 @@ Changes that are not behavioral — packaging, tooling, docs — go under a
   uncertainty.
   → Labels move with consequence. The same word means different things at
     different stakes, and the answer says which. (Step 6)
+
+**Design**
+
+- No failure prompted this one. On known ground the user's rotation narrows on
+  its own, and a skill that only answers what it is asked will keep confirming
+  that rotation rather than widening it — the twenty places stay twenty, and
+  the four that opened last month never surface.
+  → An occasional unprompted suggestion, built so that ignoring it is free:
+    one sentence, one candidate, no question attached, after the answer rather
+    than inside it, and silent unless the stakes are low and the ground is
+    familiar. (Step 8)
+
+  **Unearned, so watch it.** It works if the user actually tries something it
+  surfaced and it becomes part of the rotation. It fails if it reads as a nudge,
+  if it fires on occasions or under time pressure, or if it goes ignored twice
+  and keeps appearing. Eval 7 checks the mechanics; only the log will show
+  whether the rule was worth having.
 
 **Content**
 
