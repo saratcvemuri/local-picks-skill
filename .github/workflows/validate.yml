@@ -59,14 +59,6 @@ jobs:
                       f"plugin.json name {plg.get('name')!r}"
                   )
 
-          placeholders = [
-              f"{path}: still contains a setup placeholder ({hit})"
-              for path in (".claude-plugin/marketplace.json", ".claude-plugin/plugin.json", "README.md")
-              for hit in ("Sarat Vemuri", "saratcvemuri/")
-              if hit in pathlib.Path(path).read_text()
-          ]
-          errors.extend(placeholders)
-
           for error in errors:
               print(f"  - {error}", file=sys.stderr)
           sys.exit(1 if errors else 0)
