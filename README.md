@@ -16,10 +16,20 @@ from failure modes a star rating cannot see:
   by two tenths. Tour marketplaces are the worst offenders.
 - **Logistics.** Dark days, last seating, timed entry sold out, last funicular.
 
-So the skill ranks sources by how hard they are to game, screens each candidate
-against the traps specific to its category, and puts an explicit confidence
-label — Verified, Probable, Thin — on every pick. Thin data never gets presented
-as certainty.
+So the skill routes by how much evidence actually exists for the particular
+ask, rather than by geography. Three regimes decide which sources to trust:
+**known ground**, where the user's own history beats any guide and the value is
+rotation; **unfamiliar and consequential**, where inspected and edited sources
+earn their keep; and **unfamiliar and ordinary**, the highest-volume case, where
+carefully read crowd data is all there is and which is not treated as a fallback
+to apologize for.
+
+It then screens each candidate against the traps specific to its category and
+labels every claim — Verified, Probable, Thin — with quality and operational
+claims labeled separately, because "excellent" and "has a bar you can walk into"
+are two claims with one source behind them. The labels move with consequence:
+Thin on a one-shot evening abroad is a warning, Thin on a Tuesday near home is
+closer to an invitation.
 
 It is instructions only. No scripts, no network calls, nothing to execute. You
 can audit the whole thing in one sitting, which is the point.
@@ -55,9 +65,9 @@ cd skills && zip -r ../local-picks.zip local-picks && cd ..
 
 ```
 skills/local-picks/SKILL.md      the skill
-evals/local-picks/prompts.md     six prompts, read by a human
+evals/local-picks/prompts.md     seven checks, read by a human
 scripts/validate_skills.py       spec and policy checks, run in CI
-scripts/denylist.txt             personal-data patterns
+scripts/denylist.txt             personal-data and named-source patterns
 CHANGELOG.md                     one entry per change, failure first
 .claude-plugin/                  marketplace and plugin manifests
 ```
@@ -85,17 +95,28 @@ of them; it belongs under `metadata`.
 
 **Policy checks** are this repo's own, and nothing outside it enforces them:
 
-- **Body budget: 300 lines.** Anthropic's guidance allows 500. This is tighter
+- **Body budget: 250 lines.** Anthropic's guidance allows 500. This is tighter
   on purpose. The skill gains a rule every time a recommendation fails, and an
   unchecked file grows past the point where it is read carefully. Failing the
-  build is the enforcement mechanism. Raising the number is a decision, not a
-  fix — and the reason to raise it is never "the file got long."
-- **No personal data.** The skill is public and the pressure to embed one useful
-  local fact is constant: the dietary line that keeps coming up, the
-  neighborhood you always stay in, the restaurant that worked last time. Each is
-  individually harmless and collectively turns a general method into one
+  build forces consolidate-or-drop at the moment of the edit, which is the only
+  time there is enough context to decide well — and it works: the restructure
+  that introduced the three regimes added a third of a file and still came out
+  shorter. Raising the number is a decision, not a fix, and the reason to raise
+  it is never "the file got long."
+- **No personal data and no place facts.** The skill is public and the pressure
+  to embed one useful local fact is constant: the dietary line that keeps coming
+  up, the neighborhood you always stay in, the restaurant that worked last time.
+  Each is individually harmless and collectively turns a general method into one
   person's notebook. Facts about places belong in the user's memory. The skill
   holds only the method for finding them.
+
+  The deny-list also covers **named guides, publications and booking
+  platforms**, which is a design constraint rather than a privacy one. The skill
+  describes source tiers by their properties — anonymous repeat visits, named
+  methodology, an editorial team that signs its verdict — so that it still works
+  in the cities no guide covers, which is most of them. Naming a specific guide
+  quietly reintroduces the assumption that there is one to consult. Named
+  exemplars, if they are wanted, belong in a separate `references/` file.
 
   `scripts/denylist.txt` is a tripwire, not a guarantee. It cannot recognise an
   arbitrary restaurant or hotel name, and no pattern list can — reviewing a diff
@@ -109,7 +130,7 @@ Anthropic's platform docs and the Agent Skills spec both give **1024
 characters** as the maximum for `description`. The claude.ai Help Center article
 on creating custom skills says **200**. The validator enforces 1024, on the
 grounds that it is the normative spec and two other sources agree. This skill's
-description is 920 characters, so if the 200 figure turns out to govern the
+description is 883 characters, so if the 200 figure turns out to govern the
 claude.ai upload path specifically, that route will need a shortened
 description. Nothing else is affected.
 

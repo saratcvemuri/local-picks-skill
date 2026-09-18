@@ -20,6 +20,49 @@ Changes that are not behavioral — packaging, tooling, docs — go under a
 
 ---
 
+## 2026-09-18
+
+- The source hierarchy was built from two queries in a city with full inspected
+  guide coverage. It generalized badly twice over: to the cities that have no
+  coverage at all, which is most of them, and to home, where the user already
+  has better evidence than any guide.
+  → Three evidence regimes — known ground, unfamiliar and consequential,
+    unfamiliar and ordinary — replace the home/travel split. Reading crowd data
+    is promoted from a tier to a full section, because it is the common case
+    rather than the fallback. Edited sources are demoted to the regime where
+    they actually earn their keep. (Steps 3–4)
+
+- Confidence labels calibrated for one-shot travel decisions read as warnings
+  ten minutes from the user's house, where being wrong costs one weeknight
+  dinner and the user is the cheapest available instrument for resolving the
+  uncertainty.
+  → Labels move with consequence. The same word means different things at
+    different stakes, and the answer says which. (Step 6)
+
+**Content**
+
+- The rewrite reintroduced a real dietary line in the Step 1 example, added a
+  named restaurant to the Step 8 example, and named one guide tier in Step 3
+  while describing every other source by its properties. All three are the kind
+  of fact this file is not supposed to hold, and the last one also undercuts the
+  reason the tiers are described by property at all.
+  → Examples keep their shape and specificity but carry no real place, no real
+    preference and no named guide. (Steps 1, 3, 8)
+
+**Repository**
+
+- Body budget set to 250 lines, reverting the 300 agreed on 2026-09-17. The
+  restructure above added a third of a file and still came out shorter, which
+  is the argument for the tighter number rather than against it. Body is now
+  198 lines.
+- Deny-list extended to named guides, publications and booking platforms. The
+  skill describes source tiers by their properties so that it still works where
+  no guide covers anything; naming one undoes that. Named exemplars, if wanted,
+  go in `references/`.
+- Evals rewritten to the seven checks, adding regime routing and the
+  exploratory suggestion. Both are run as sequences rather than single prompts,
+  because neither failure mode is visible in one response.
+
 ## 2026-09-17
 
 **Repository**

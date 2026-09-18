@@ -56,6 +56,18 @@
 # Deliberately narrow; most neighborhoods will not match anything.
 \b(Saint|St\.|Sainte|San|Santa|Santo)[- ][A-Z][a-z]+\b
 
+# --- Named guides, publications and platforms -----------------------------
+# The skill describes source tiers by their properties -- anonymous repeat
+# visits, named methodology, an editorial team that signs its verdict -- so that
+# it still works in the cities no guide covers. Naming a specific guide undoes
+# that: it reads as "look here first", and in most places the user goes there is
+# nothing to look at. Named exemplars belong in references/, not in SKILL.md.
+\b(Michelin|Bib Gourmand|Green Guide|Zagat|Gault|Millau|James Beard)\b
+\b(TripAdvisor|Tripadvisor|Yelp|Google Maps|Foursquare|Beli|OpenTable|Resy)\b
+\b(Booking\.com|Airbnb|Expedia|Hotels\.com|Agoda|Trivago)\b
+\b(Viator|GetYourGuide|Klook|Tiqets)\b
+\b(Cond[eé] Nast|Eater|Time Out|Fodor|Frommer|Lonely Planet|Rick Steves)\b
+
 # --- Booking and venue tells ---------------------------------------------
 # A URL or a phone number in a skill body is almost always a specific place.
 https?://(?!docs\.claude\.com|platform\.claude\.com|agentskills\.io)

@@ -54,10 +54,13 @@ XML_TAG = re.compile(r"<[^>]+>")
 # --- Policy constants -----------------------------------------------------
 # The body budget is deliberate, not technical. The skill gains a rule every
 # time a recommendation fails; an unchecked file grows past the point where it
-# is read carefully. Anthropic's own guidance allows 500 lines. This is
-# tighter on purpose. Raising it is a decision, not a fix.
+# is read carefully. Anthropic's own guidance allows 500 lines. This is tighter
+# on purpose: failing the build forces consolidate-or-drop at the moment of the
+# edit, which is the only time there is enough context to decide well. The
+# budget has already survived one restructure that added a third of a file and
+# came out shorter. Raising it is a decision, not a fix.
 
-BODY_MAX_LINES = 300
+BODY_MAX_LINES = 250
 
 FRONTMATTER = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n?", re.DOTALL)
 

@@ -1,38 +1,43 @@
 # Evals — local-picks
 
-Six checks. A human reads the response and decides; nothing here is asserted
-automatically. The point is catching regressions after an edit, not scoring.
+Seven checks plus an inverse. A human reads the response and decides; nothing
+here is asserted automatically. The point is catching regressions after an edit,
+not scoring.
 
 Run them against a session with the skill installed and nothing else unusual in
 context. Where a check depends on something being on file about the user, set
 that up first — a skill that opens with assumptions has nothing to assume
-otherwise, and Step 1 explicitly tells it to skip straight to Step 2.
+otherwise, and Step 1 says to skip straight to Step 2 when nothing is known.
+
+Checks 6 and 7 are the ones that decay quietly. A single prompt will not show
+whether the regime split is firing or whether the exploratory suggestion is
+rate-limited, so both are run as sequences and compared.
 
 Record each run in a scratch file, not here. This file is the fixture.
 
 ---
 
-## 1. Dinner where the coverage is good
+## 1. Dinner tonight, unfamiliar city with good editorial coverage
 
-> Where should we eat dinner tonight in [a city with Michelin coverage and a
+> Where should we eat dinner tonight in [a city with inspected coverage and a
 > named local dining critic]?
 
 **Must contain**
 
-- An opening that names the inferred context and states assumptions before
-  recommending anything (Step 1).
-- A confidence label on every pick, with the evidence named (Step 5).
-- Tier A/B sources doing the work — Michelin including Bib Gourmand and the
-  plain recommended tier, or a named local critic (Step 3).
+- An opening that names the regime — unfamiliar and consequential — along with
+  the assumptions that follow (Step 1).
+- A confidence label on every pick, with the evidence behind it (Step 6).
+- Inspected and edited sources doing the work, because tiers 1 and 2 are empty
+  here (Step 3).
 
 **Must not contain**
 
-- A list that reads as a map or search sorted by rating. This is the failure
-  mode the whole skill exists to prevent.
+- A rating-sorted list of the top four. This is the failure mode the skill
+  exists to prevent.
 - More than four picks.
 
 **Watch for:** menu format going unmentioned. Editorial coverage says the
-kitchen is good; it does not say the room is served one fixed menu (Step 4).
+kitchen is good; it does not say the room is served one fixed menu (Step 5).
 
 ---
 
@@ -43,15 +48,16 @@ kitchen is good; it does not say the room is served one fixed menu (Step 4).
 
 **Must contain**
 
-- Stay-gated booking-platform reviews used as the primary evidence, with recent
-  ones weighted and older ones discounted (Step 3, Lodging C).
-- Three-star reviews read specifically, since that is where noise, room variance
-  and maintenance surface.
-- A **Thin** label where crowd data is all there is, with the reason named in a
-  clause — small sample, bimodal, open under a year.
+- Stay-gated booking-platform reviews as the primary evidence, since the
+  reviewer demonstrably slept there, with the last six to twelve months weighted
+  and older reviews largely ignored (Step 3).
+- The 2- and 3-star reviews read specifically — that is where noise, room
+  variance and maintenance surface (Step 4).
+- A **Thin** label with the reason named: small sample, bimodal, open under a
+  year (Step 6).
 
 **Watch for:** manufactured confidence. When a whole category comes back thin,
-the skill requires saying so plainly rather than dressing it up.
+the skill requires saying so plainly.
 
 ---
 
@@ -61,11 +67,10 @@ the skill requires saying so plainly rather than dressing it up.
 
 **Must contain**
 
-- Dark days checked before anything is sequenced — many museums close Monday or
-  Tuesday (Step 4, Sights).
+- Dark days checked before anything is sequenced (Step 5).
 - Last admission, which is often an hour before closing.
 - An indoor fallback carried explicitly, not implied.
-- The one thing most likely to break the plan, stated (Step 6).
+- The one thing most likely to break the plan, stated (Step 7).
 
 **Watch for:** two ticketed entries stacked back to back.
 
@@ -77,16 +82,15 @@ the skill requires saying so plainly rather than dressing it up.
 
 **Must contain**
 
-- Identification of who actually operates the tour, as distinct from who is
-  selling it.
-- A steer to booking direct with that operator.
+- Identification of who actually operates the tour, as distinct from who sells
+  it, and a steer to booking direct (Step 3).
 - An explicit statement that the listing's reviews may not describe the product
   being sold, because listings frequently resell another operator's tour.
 
 **Must not contain**
 
-- The listing's star rating treated as evidence about the guide who will show
-  up (Anti-patterns).
+- The listing's star rating treated as evidence about the guide who will
+  actually show up (Anti-patterns).
 
 ---
 
@@ -98,28 +102,76 @@ Set up: a dietary line recorded in the user's preferences before running this.
 
 **Must contain**
 
-- The restaurant's own posted menu read, not a guide listing (Step 4).
-- **A count of the dishes that actually clear the constraint, stated as a
-  number.** "Two of eight" passes. "Has options" fails.
-- A preference for a long à la carte card where the count is low.
-- Small-plates formats screened, not waved through — the format concentrates
-  protein choices rather than spreading them.
+- The restaurant's own posted menu read, not a guide listing (Step 5).
+- **A count of the dishes that clear the constraint, stated as a number.** "Two
+  of eight" passes. "Has options" fails.
+- A preference for a long a la carte card where the count is low.
+- Small-plates formats screened rather than waved through — the format
+  concentrates protein choices rather than spreading them.
 
 ---
 
-## 6. The inverse — the skill should stay out of it
+## 6. Regime routing
+
+Two prompts that differ **only in stakes**. Run both and compare the shape of
+the answers, not their content.
+
+> **6a.** Where should we grab dinner tonight? Somewhere near the house.
+
+> **6b.** Where should we go for our anniversary next month? Somewhere in [the
+> same metro].
+
+**6a must** lean on the user's own history and habitual radius, optimize for
+rotation rather than ranking, and treat a Thin label as low-cost — closer to an
+invitation than a warning, because being wrong costs one weeknight dinner.
+
+**6b must** reach for inspected and edited sources, treat the same Thin label as
+a warning, and pair any thin pick with a Verified or Probable alternative.
+
+**The check fails if both produce the same shape of answer.** That is the whole
+point of the split: a large metro an hour from home is unfamiliar ground, and a
+price bracket the user rarely enters is unfamiliar ground even in their own
+city. If the labels do not move with consequence, Step 6 is not firing and the
+regimes have collapsed back into a home/travel distinction.
+
+---
+
+## 7. The exploratory suggestion
+
+Run several known-ground, low-stakes asks in sequence across separate
+conversations, then the negative cases below.
+
+**Across the sequence it must**
+
+- Appear **at most once**, not once per answer (Step 8).
+- Come **after** the answer that was asked for is complete — never woven into
+  the picks, never instead of one.
+- Be one sentence, one candidate, no pitch, and **no question attached**. A
+  question creates an obligation to reply; a statement can be ignored for free.
+- Stay silent when nothing clears the bar. No "nothing new nearby this time."
+
+**It must not appear at all** on any of these:
+
+- An occasion, or anything with guests or clients.
+- While traveling.
+- Under time pressure.
+- When the user asked for something reliable.
+
+**Watch for:** a candidate the user passed on being raised again, and for the
+suggestion turning into a recurring nudge. If two go by without engagement, it
+should stop offering for a good while — silence is data.
+
+---
+
+## Inverse — the skill should stay out of it
 
 > How long should I roast a chicken for?
 
-**Must contain**
+**Must contain** a direct answer.
 
-- A direct answer.
-
-**Must not contain**
-
-- Any sign of the skill: no context statement, no confidence labels, no source
-  hierarchy. A cooking question is not a places question, and a skill that
-  triggers here is miscalibrated in its description, not its body.
+**Must not contain** any sign of the skill: no regime statement, no confidence
+labels, no evidence ranking. A cooking question is not a places question, and a
+skill that triggers here is miscalibrated in its description, not its body.
 
 ---
 
